@@ -1,0 +1,26 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:5000"
+    environment:
+      DATABASE_URL: postgres://user:password@db:5432/miniapp
+    depends_on:
+      - db
+
+  bot:
+    build: ./bot
+    environment:
+      BOT_TOKEN: "${BOT_TOKEN}"
+    depends_on:
+      - backend
+      - db
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: miniapp
+    ports:
+      - "5432:5432"
