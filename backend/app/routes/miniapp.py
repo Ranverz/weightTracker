@@ -38,6 +38,11 @@ def require_user_id():
     return uid, None
 
 
+@miniapp_bp.route("/health")
+def health_check():
+    return {"status": "ok"}, 200
+
+
 @miniapp_bp.route("/miniapp")
 def miniapp_days():
     uid, error_response = require_user_id()
