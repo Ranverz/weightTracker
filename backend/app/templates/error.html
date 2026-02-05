@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2 class="section-title">Ошибка {{ code }}</h2>
+<div class="item">
+    <div class="item-main">
+        <div class="item-title">{{ title }}</div>
+        <div class="item-sub">{{ message }}</div>
+    </div>
+</div>
+
+<a class="btn-secondary" href="/miniapp">Назад</a>
+
+{% endblock %}

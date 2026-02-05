@@ -1,10 +1,15 @@
 FROM python:3.11
 
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
 WORKDIR /app
 
 COPY requirements.txt .
-RUN pip install -r requirements.txt
 
-COPY app ./app
+RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["python", "app/main.py"]
+COPY . /app/backend
+
+CMD ["python", "-m", "backend.app.wsgi"]

@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2 class="section-title">Редактировать упражнение</h2>
+
+<form method="POST">
+    <label class="label">Название упражнения</label>
+    <input class="input" type="text" name="name" value="{{ exercise.name }}" required>
+
+    <label class="label">Единица веса по умолчанию</label>
+    <select class="select" name="default_unit">
+        <option value="kg" {% if exercise.default_unit == "kg" %}selected{% endif %}>кг</option>
+        <option value="plates" {% if exercise.default_unit == "plates" %}selected{% endif %}>плиты</option>
+    </select>
+
+    <button class="btn">Сохранить</button>
+</form>
+
+<form method="POST" action="/miniapp/exercise/{{ exercise.id }}/delete">
+    <button class="btn btn-danger" type="submit">Удалить упражнение</button>
+</form>
+
+<a class="btn-secondary" href="/miniapp/day/{{ exercise.day }}">Назад</a>
+
+{% endblock %}

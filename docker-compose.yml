@@ -1,17 +1,21 @@
 services:
+
   backend:
     build: ./backend
     ports:
       - "8000:5000"
     environment:
-      DATABASE_URL: postgres://user:password@db:5432/miniapp
+      - DATABASE_URL=${DATABASE_URL}
+      - BOT_TOKEN=${BOT_TOKEN}
     depends_on:
       - db
 
   bot:
     build: ./bot
     environment:
-      BOT_TOKEN: "${BOT_TOKEN}"
+      - BOT_TOKEN=${BOT_TOKEN}
+      - WEBAPP_URL=${WEBAPP_URL}
+      - DATABASE_URL=${DATABASE_URL}
     depends_on:
       - backend
       - db
@@ -19,8 +23,10 @@ services:
   db:
     image: postgres:15
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: miniapp
+      POSTGRES_DB: weightdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./backend/app/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"

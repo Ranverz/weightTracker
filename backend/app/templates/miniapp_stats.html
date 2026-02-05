@@ -1,0 +1,109 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2 class="section-title">Прогресс</h2>
+
+<select id="exerciseFilter" class="select">
+    <option value="all">Все упражнения</option>
+</select>
+
+{% if data|length == 0 %}
+    <p class="text-muted">Пока нет данных для статистики.</p>
+{% endif %}
+
+<div class="chart-card">
+    <canvas id="chart"></canvas>
+</div>
+
+<a class="btn-secondary" href="/miniapp">Назад</a>
+
+<script>
+    const rawData = {{ data|tojson }};
+    const colors = ["#007AFF", "#34C759", "#FF9500", "#AF52DE", "#FF3B30", "#5AC8FA"];
+
+    const grouped = {};
+    rawData.forEach(row => {
+        const key = `${row.exercise} (${row.unit === "plates" ? "плиты" : "кг"})`;
+        if (!grouped[key]) grouped[key] = [];
+        grouped[key].push(row);
+    });
+
+    const exercises = Object.keys(grouped);
+    const filter = document.getElementById("exerciseFilter");
+    exercises.forEach(name => {
+        const opt = document.createElement("option");
+        opt.value = name;
+        opt.textContent = name;
+        filter.appendChild(opt);
+    });
+
+    const labelsAll = rawData.map(x => x.datetime);
+
+    function buildDataset(name, index, labels) {
+        const map = {};
+        grouped[name].forEach(r => { map[r.datetime] = r.weight; });
+        return {
+            label: name,
+            data: labels.map(d => map[d] ?? null),
+            borderColor: colors[index % colors.length],
+            backgroundColor: "rgba(0,0,0,0)",
+            borderWidth: 3,
+            tension: 0.35,
+            pointRadius: 4,
+            pointBackgroundColor: "#FFF",
+            pointBorderColor: colors[index % colors.length],
+            pointBorderWidth: 2,
+            spanGaps: true
+        };
+    }
+
+    const ctx = document.getElementById("chart");
+    const chart = new Chart(ctx, {
+        type: "line",
+        data: { labels: labelsAll, datasets: [] },
+        options: {
+            plugins: {
+                legend: { display: true }
+            },
+            scales: {
+                x: {
+                    ticks: { color: "#555", font: { size: 12 } },
+                    grid: { display: false }
+                },
+                y: {
+                    ticks: { color: "#555", font: { size: 12 } },
+                    grid: { color: "#E5E5EA" }
+                }
+            }
+        }
+    });
+
+    function renderSelection(value) {
+        if (value === "all") {
+            chart.data.labels = labelsAll;
+            chart.data.datasets = exercises.map((name, idx) => buildDataset(name, idx, labelsAll));
+        } else {
+            const labels = grouped[value].map(x => x.datetime);
+            const values = grouped[value].map(x => x.weight);
+            chart.data.labels = labels;
+            chart.data.datasets = [{
+                label: value,
+                data: values,
+                borderColor: colors[0],
+                backgroundColor: "rgba(0,122,255,0.2)",
+                borderWidth: 3,
+                tension: 0.35,
+                pointRadius: 5,
+                pointBackgroundColor: "#FFF",
+                pointBorderColor: colors[0],
+                pointBorderWidth: 2
+            }];
+        }
+        chart.update();
+    }
+
+    renderSelection("all");
+    filter.addEventListener("change", (e) => renderSelection(e.target.value));
+</script>
+
+{% endblock %}
