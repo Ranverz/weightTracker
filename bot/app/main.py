@@ -18,19 +18,19 @@ dp = Dispatcher()
 
 @dp.message(Command("start"))
 async def start(message: types.Message):
-    kb = [
-        [types.KeyboardButton(
-            text="Открыть приложение",
-            web_app=types.WebAppInfo(url=f"{config.webapp_url}/miniapp")
-        )]
-    ]
+    # kb = [
+    #     [types.KeyboardButton(
+    #         text="Открыть приложение",
+    #         web_app=types.WebAppInfo(url=f"{config.webapp_url}/miniapp")
+    #     )]
+    # ]
 
-    keyboard = types.ReplyKeyboardMarkup(
-        keyboard=kb,
-        resize_keyboard=True
-    )
+    # keyboard = types.ReplyKeyboardMarkup(
+    #     keyboard=kb,
+    #     resize_keyboard=True
+    # )
 
-    await message.answer("Отройте мини-апп через синюю кнопку снизу")
+    await message.answer("Откройте мини-апп через синюю кнопку (Open) снизу")
 
 
 @dp.message(F.web_app_data)
