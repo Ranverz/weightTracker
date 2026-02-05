@@ -1,7 +1,8 @@
-.PHONY: help up down build logs clean test lint format fmt check prod
+.PHONY: help setup up down build logs clean test lint format fmt check prod
 
 help:
 	@echo "Targets:"
+	@echo "  make setup     - create .env from .env.example"
 	@echo "  make up        - start dev stack (docker compose)"
 	@echo "  make down      - stop dev stack"
 	@echo "  make build     - rebuild images"
@@ -41,3 +42,5 @@ check: lint test
 
 prod:
 	docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+setup:
+	@test -f .env || cp .env.example .env

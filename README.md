@@ -27,6 +27,18 @@ Backend is on:
 
 ---
 
+## Makefile shortcuts
+```bash
+make setup     # create .env from .env.example
+make up        # docker compose up --build
+make down      # stop containers
+make logs      # follow logs
+make test      # run backend tests
+make lint      # ruff
+make format    # black
+make prod      # production stack
+```
+
 ## перенос на другой ПК/сервер (полная копия)
 ```bash
 git clone https://github.com/Ranverz/weightTracker.git
