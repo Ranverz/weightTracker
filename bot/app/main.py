@@ -30,7 +30,7 @@ async def start(message: types.Message):
         resize_keyboard=True
     )
 
-    await message.answer("Открываю Mini App 🚀", reply_markup=keyboard)
+    await message.answer("Отройте мини-апп через синюю кнопку снизу")
 
 
 @dp.message(F.web_app_data)
